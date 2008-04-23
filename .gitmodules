@@ -1,0 +1,3 @@
+[submodule "example_rails_app/vendor/plugins/posy"]
+	path = example_rails_app/vendor/plugins/posy
+	url = git://github.com/viking/posy
