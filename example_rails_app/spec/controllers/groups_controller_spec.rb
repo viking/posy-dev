@@ -1,235 +1,185 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe GroupsController, "#route_for" do
-
-  it "should map { :controller => 'groups', :action => 'index' } to /groups" do
-    route_for(:controller => "groups", :action => "index").should == "/groups"
-  end
-  
-  it "should map { :controller => 'groups', :action => 'new' } to /groups/new" do
-    route_for(:controller => "groups", :action => "new").should == "/groups/new"
-  end
-  
-  it "should map { :controller => 'groups', :action => 'show', :id => 1 } to /groups/1" do
-    route_for(:controller => "groups", :action => "show", :id => 1).should == "/groups/1"
-  end
-  
-  it "should map { :controller => 'groups', :action => 'edit', :id => 1 } to /groups/1/edit" do
-    route_for(:controller => "groups", :action => "edit", :id => 1).should == "/groups/1/edit"
-  end
-  
-  it "should map { :controller => 'groups', :action => 'update', :id => 1} to /groups/1" do
-    route_for(:controller => "groups", :action => "update", :id => 1).should == "/groups/1"
-  end
-  
-  it "should map { :controller => 'groups', :action => 'destroy', :id => 1} to /groups/1" do
-    route_for(:controller => "groups", :action => "destroy", :id => 1).should == "/groups/1"
-  end
-  
-end
-
-describe GroupsController, "when no one is logged in" do
-
-  it "should redirect to /sessions/new on GET to index" do
-    get :index
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-
-  it "should redirect to /sessions/new on GET to new" do
-    get :new
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-
-  it "should redirect to /sessions/new on GET to show" do
-    get :show, :id => "1"
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-
-  it "should redirect to /sessions/new on GET to edit" do
-    get :edit, :id => "1"
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-
-  it "should redirect to /sessions/new on POST to create" do
-    post :create
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-
-  it "should redirect to /sessions/new on PUT to update" do
-    put :update, :id => "1"
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-
-  it "should redirect to /sessions/new on DELETE to destroy" do
-    delete :destroy, :id => "1"
-    response.should redirect_to(:controller => "sessions", :action => "new") 
-  end
-end
-
-describe GroupsController, "handling GET /groups as admin" do
-
+describe GroupsController do
   include AuthenticatedTestHelper
   fixtures :users, :groups, :memberships, :permissions
 
-  before(:each) do
-    login_as(:admin)
-    Group.stub!(:find).and_return([])
+  describe "when no one is logged in" do
 
-    get :index
+    it "should redirect to /sessions/new on GET to index" do
+      get :index
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
+
+    it "should redirect to /sessions/new on GET to new" do
+      get :new
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
+
+    it "should redirect to /sessions/new on GET to show" do
+      get :show, :id => "1"
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
+
+    it "should redirect to /sessions/new on GET to edit" do
+      get :edit, :id => "1"
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
+
+    it "should redirect to /sessions/new on POST to create" do
+      post :create
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
+
+    it "should redirect to /sessions/new on PUT to update" do
+      put :update, :id => "1"
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
+
+    it "should redirect to /sessions/new on DELETE to destroy" do
+      delete :destroy, :id => "1"
+      response.should redirect_to(:controller => "sessions", :action => "new") 
+    end
   end
 
-  it "should be successful" do
-    response.should be_success
-  end
+  describe "when logged in as admin" do
 
-  it "should set @groups" do
-    assigns[:groups].should == [] 
-  end
-end
+    before(:each) do
+      login_as(:admin)
+      @group = mock_model(Group)
+    end
 
-describe GroupsController, "handling GET /groups/1 as admin" do
+    describe "handling GET /groups" do
 
-  include AuthenticatedTestHelper
-  fixtures :users, :groups, :memberships, :permissions
+      before(:each) do
+        Group.stub!(:find).and_return([@group])
+        get :index
+      end
 
-  before(:each) do
-    login_as(:admin)
-    @group = mock_model(Group)
-    Group.stub!(:find).and_return(@group)
+      it "should be successful" do
+        response.should be_success
+      end
 
-    get :show, :id => "1"
-  end
+      it "should set @groups" do
+        assigns[:groups].should == [@group] 
+      end
+    end
 
-  it "should be successful" do
-    response.should be_success
-  end
+    describe "handling GET /groups/1" do
 
-  it "should set @group" do
-    assigns[:group].should == @group
-  end
-end
+      before(:each) do
+        Group.stub!(:find).and_return(@group)
 
-describe GroupsController, "handling GET /groups/new as admin" do
+        get :show, :id => "1"
+      end
 
-  include AuthenticatedTestHelper
-  fixtures :users, :groups, :memberships, :permissions
+      it "should be successful" do
+        response.should be_success
+      end
 
-  before(:each) do
-    login_as(:admin)
-    @group = mock_model(Group)
-    Group.stub!(:new).and_return(@group)
+      it "should set @group" do
+        assigns[:group].should == @group
+      end
+    end
 
-    get :new
-  end
+    describe "handling GET /groups/new" do
 
-  it "should be successful" do
-    response.should be_success
-  end
+      before(:each) do
+        Group.stub!(:new).and_return(@group)
 
-  it "should set @group" do
-    assigns[:group].should == @group
-  end
-end
+        get :new
+      end
 
-describe GroupsController, "handling GET /groups/1/edit as admin" do
+      it "should be successful" do
+        response.should be_success
+      end
 
-  include AuthenticatedTestHelper
-  fixtures :users, :groups, :memberships, :permissions
+      it "should set @group" do
+        assigns[:group].should == @group
+      end
+    end
 
-  before(:each) do
-    login_as(:admin)
-    @group = mock_model(Group)
-    Group.stub!(:find).and_return(@group)
+    describe "handling GET /groups/1/edit" do
 
-    get :edit, :id => "1"
-  end
+      before(:each) do
+        Group.stub!(:find).and_return(@group)
 
-  it "should GET /groups/1/edit successfully" do
-    response.should be_success
-  end
+        get :edit, :id => "1"
+      end
 
-  it "should have a @group after GET /groups/1/edit" do
-    assigns[:group].should == @group
-  end
-end
+      it "should GET /groups/1/edit successfully" do
+        response.should be_success
+      end
 
-describe GroupsController, "handling POST /groups as admin" do
+      it "should have a @group after GET /groups/1/edit" do
+        assigns[:group].should == @group
+      end
+    end
 
-  include AuthenticatedTestHelper
-  fixtures :users, :groups, :memberships, :permissions
+    describe "handling POST /groups" do
 
-  before(:each) do
-    login_as(:admin)
-    @group = mock_model(Group)
-    Group.stub!(:new).and_return(@group)
-    @group.stub!(:save).and_return(true)
-  end
+      before(:each) do
+        Group.stub!(:new).and_return(@group)
+        @group.stub!(:save).and_return(true)
+      end
 
-  it "should redirect to /groups/:id when valid" do
-    post :create
-    response.should redirect_to(group_url(@group))
-  end
+      it "should redirect to /groups/:id when valid" do
+        post :create
+        response.should redirect_to(group_url(@group))
+      end
 
-  it "should render 'new' when invalid" do
-    @group.stub!(:save).and_return(false)
-    post :create
-    response.should render_template("new")
-  end
+      it "should render 'new' when invalid" do
+        @group.stub!(:save).and_return(false)
+        post :create
+        response.should render_template("new")
+      end
 
-  it "should set @group" do
-    post :create
-    assigns[:group].should == @group
-  end
-end
+      it "should set @group" do
+        post :create
+        assigns[:group].should == @group
+      end
+    end
 
-describe GroupsController, "handling PUT /groups/1 as admin" do
+    describe "handling PUT /groups/1" do
 
-  include AuthenticatedTestHelper
-  fixtures :users, :groups, :memberships, :permissions
+      before(:each) do
+        Group.stub!(:find).and_return(@group)
+        @group.stub!(:update_attributes).and_return(true)
+      end
 
-  before(:each) do
-    login_as(:admin)
-    @group = mock_model(Group)
-    Group.stub!(:find).and_return(@group)
-    @group.stub!(:update_attributes).and_return(true)
-  end
+      it "should redirect to /groups/:id when valid" do
+        put :update, :id => '1'
+        response.should redirect_to(group_url(@group))
+      end
 
-  it "should redirect to /groups/:id when valid" do
-    put :update, :id => '1'
-    response.should redirect_to(group_url(@group))
-  end
+      it "should render 'edit' when invalid" do
+        @group.stub!(:update_attributes).and_return(false)
+        put :update, :id => '1'
+        response.should render_template("edit")
+      end
 
-  it "should render 'edit' when invalid" do
-    @group.stub!(:update_attributes).and_return(false)
-    put :update, :id => '1'
-    response.should render_template("edit")
-  end
+      it "should set @group" do
+        put :update, :id => '1'
+        assigns[:group].should == @group
+      end
+    end
 
-  it "should set @group" do
-    put :update, :id => '1'
-    assigns[:group].should == @group
-  end
-end
+    describe "handling DELETE /groups/1" do
 
-describe GroupsController, "handling DELETE /groups/1 as admin" do
+      before(:each) do
+        Group.stub!(:find).and_return(@group)
+        @group.stub!(:destroy).and_return(@group)
 
-  include AuthenticatedTestHelper
-  fixtures :users, :groups, :memberships, :permissions
+        delete :destroy, :id => '1'
+      end
 
-  before(:each) do
-    login_as(:admin)
-    @group = mock_model(Group)
-    Group.stub!(:find).and_return(@group)
-    @group.stub!(:destroy).and_return(@group)
+      it "should redirect to /groups" do
+        response.should redirect_to(groups_url)
+      end
 
-    delete :destroy, :id => '1'
-  end
-
-  it "should redirect to /groups" do
-    response.should redirect_to(groups_url)
-  end
-
-  it "should set @group" do
-    assigns[:group].should == @group
+      it "should set @group" do
+        assigns[:group].should == @group
+      end
+    end
   end
 end
