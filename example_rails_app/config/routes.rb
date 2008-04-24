@@ -1,4 +1,13 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :sessions, :permissions, :memberships
+  map.resources :users do |user|
+    user.resources :memberships, :name_prefix => 'user_'
+  end
+  map.resources :groups do |group|
+    group.resources :memberships, :name_prefix => 'group_'
+    group.resources :permissions, :name_prefix => 'group_'
+  end
+
   map.resources :dogs
 
   map.resources :cats

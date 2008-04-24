@@ -1,0 +1,60 @@
+<h1>Showing user</h1>
+
+<p>
+  <b>Login:</b>
+  <%=h @user.login %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%=h @user.email %>
+</p>
+
+<p>
+  <b>Created At:</b>
+  <%=h @user.created_at %>
+</p>
+
+<p>
+  <b>Updated At:</b>
+  <%=h @user.updated_at %>
+</p>
+
+<p>
+  <b>Created By:</b>
+  <%=h @user.creator ? @user.creator.login : "N/A" %>
+</p>
+
+<p>
+  <b>Updated By:</b>
+  <%=h @user.updater ? @user.updater.login : "N/A" %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>
+
+<br/>
+<h2>User's groups</h2>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Permanent</th>
+  </tr>
+  
+<% for group in @user.groups %>
+  <tr>
+    <td><%=h group.name %></td>
+    <td><%=h group.description %></td>
+    <td><%=h group.permanent %></td>
+    <td><%= link_to 'Show', group_path(group) %></td>
+    <td><%= link_to 'Edit', edit_group_path(group) %></td>
+    <td><%= link_to 'Destroy', group_path(group), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<br/>
+
+<%= link_to 'Add group', new_user_membership_path(@user) %> | 
+<%= link_to 'Membership index', user_memberships_path(@user) %>

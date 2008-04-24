@@ -1,0 +1,39 @@
+<h1>Showing membership</h1>
+
+<p>
+  <b>Group:</b>
+  <%= link_to @membership.group.name, group_url(@membership.group) %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%= link_to @membership.user.login, user_url(@membership.user) %>
+</p>
+
+<p>
+  <b>Created At:</b>
+  <%=h @membership.created_at %>
+</p>
+
+<p>
+  <b>Updated At:</b>
+  <%=h @membership.updated_at %>
+</p>
+
+<p>
+  <b>Created By:</b>
+  <%=h @membership.creator ? @membership.creator.login : "N/A" %>
+</p>
+
+<p>
+  <b>Updated By:</b>
+  <%=h @membership.updater ? @membership.updater.login : "N/A" %>
+</p>
+
+<% if @user -%>
+<%= link_to 'Back', user_memberships_path(@user) %>
+<% elsif @group -%>
+<%= link_to 'Back', group_memberships_path(@group) %>
+<% else -%>
+<%= link_to 'Back', memberships_path %>
+<% end -%>

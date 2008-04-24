@@ -1,0 +1,49 @@
+<h1>Editing permission</h1>
+
+<%= error_messages_for :permission %>
+
+<% form_for(:permission, :url => url_for_update(@permission), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Group</b><br />
+    <%=h @permission.group.name %>
+  </p>
+
+  <p>
+    <b>Resource Type</b><br />
+    <%=h @permission.controller ? 'Controller' : @permission.resource_type %>
+  </p>
+
+  <% if @permission.controller -%>
+  <p>
+    <b>Controller</b><br />
+    <%=h @permission.controller %>
+  </p>
+  <% else -%>
+  <p>
+    <b>Resource</b><br />
+    <%=h @permission.resource.name %>
+  </p>
+  <% end -%>
+
+  <p>
+    <b>Read</b><br />
+    <%= f.check_box :can_read %>
+  </p>
+
+  <p>
+    <b>Write</b><br />
+    <%= f.check_box :can_write %>
+  </p>
+
+  <p>
+    <b>Sticky</b><br />
+    <%= f.check_box :is_sticky %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to_show 'Show', @permission %> |
+<%= link_to_index 'Back' %>

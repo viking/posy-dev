@@ -1,4 +1,18 @@
 #!/usr/bin/env ruby
 $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + "/../vendor/plugins/rspec/lib"))
 require 'spec'
-exit ::Spec::Runner::CommandLine.run(::Spec::Runner::OptionParser.parse(ARGV, STDERR, STDOUT))
+
+RAILS_ENV="test"
+args = ["-O", File.expand_path(File.dirname(__FILE__) + "/../spec/spec.opts")] + ARGV
+
+# run the last touched file if no arguments
+if ARGV.empty?
+  spec_files = Dir[File.expand_path(File.dirname(__FILE__) + "/../spec") + "/**/*_spec.rb"]
+  spec_files.sort! {|a, b| File.mtime(b) <=> File.mtime(a) }
+  args << spec_files[0]
+
+  puts "Running #{spec_files[0]}"
+end
+
+#exit ::Spec::Runner::CommandLine.run(::Spec::Runner::OptionParser.parse(ARGV, STDERR, STDOUT))
+exit ::Spec::Runner::CommandLine.run(::Spec::Runner::OptionParser.parse(args, STDERR, STDOUT))

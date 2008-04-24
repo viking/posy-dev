@@ -1,0 +1,24 @@
+<h1>Listing groups</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Permanent</th>
+  </tr>
+  
+<% for group in @groups %>
+  <tr>
+    <td><%=h group.name %></td>
+    <td><%=h group.description %></td>
+    <td><%=h group.permanent %></td>
+    <td><%= link_to 'Show', group_path(group) %></td>
+    <td><%= link_to 'Edit', edit_group_path(group) %></td>
+    <td><%= link_to 'Destroy', group_path(group), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New group', new_group_path %>

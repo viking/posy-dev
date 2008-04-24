@@ -1,0 +1,37 @@
+<h1>Showing permission</h1>
+
+<p>
+  <b>Group:</b>
+  <%=h @permission.group.name %>
+</p>
+
+<% if @permission.controller -%>
+<p>
+  <b>Controller:</b>
+  <%=h @permission.controller %>
+</p>
+<% else -%>
+<p>
+  <b>Resource:</b>
+  <%= resource_link(@permission.resource) %>
+</p>
+<% end -%>
+
+<p>
+  <b>Read:</b>
+  <%=h @permission.can_read ? "yes" : "no" %>
+</p>
+
+<p>
+  <b>Write:</b>
+  <%=h @permission.can_write ? "yes" : "no" %>
+</p>
+
+<p>
+  <b>Sticky:</b>
+  <%=h @permission.is_sticky ? "yes" : "no" %>
+</p>
+
+
+<%= link_to_edit 'Edit', @permission %> |
+<%= link_to_index 'Back' %>

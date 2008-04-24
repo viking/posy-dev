@@ -1,0 +1,26 @@
+<h1>Listing memberships</h1>
+
+<table>
+  <tr>
+    <th>Group</th>
+    <th>User</th>
+  </tr>
+  
+<% for membership in @memberships %>
+  <tr>
+    <td><%=h membership.group.name %></td>
+    <td><%=h membership.user.login %></td>
+    <td><%= link_to_show 'Show', membership %></td>
+    <td><%= link_to_destroy 'Destroy', membership, :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to_new 'New membership' %>
+<% if @user -%>
+| <%= link_to 'Back', user_path(@user) %>
+<% elsif @group -%>
+| <%= link_to 'Back', group_path(@group) %>
+<% end -%>

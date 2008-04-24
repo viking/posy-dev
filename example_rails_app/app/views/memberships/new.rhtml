@@ -1,0 +1,29 @@
+<h1>New membership</h1>
+
+<%= error_messages_for :membership %>
+
+<% form_for(:membership, :url => url_for_create) do |f| %>
+  <p>
+    <b>Group</b><br />
+    <% if @group -%>
+    <%=h @group.name %>
+    <% else -%>
+    <%= f.collection_select :group_id, @groups, 'id', 'name' %>
+    <% end -%>
+  </p>
+
+  <p>
+    <b>User</b><br />
+    <% if @user -%>
+    <%=h @user.login %>
+    <% else -%>
+    <%= f.collection_select :user_id, @users, 'id', 'login' %>
+    <% end -%>
+  </p>
+
+  <p>
+    <%= submit_tag "Create" %>
+  </p>
+<% end %>
+
+<%= link_to_index 'Back' %>

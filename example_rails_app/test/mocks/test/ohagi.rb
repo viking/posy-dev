@@ -1,0 +1,2 @@
+class Ohagi < FakeModel
+end

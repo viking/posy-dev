@@ -1,0 +1,91 @@
+<h1>Showing group</h1>
+
+<p>
+  <b>Name:</b>
+  <%=h @group.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @group.description %>
+</p>
+
+<p>
+  <b>Permanent:</b>
+  <%=h @group.permanent %>
+</p>
+
+<p>
+  <b>Created At:</b>
+  <%=h @group.created_at %>
+</p>
+
+<p>
+  <b>Updated At:</b>
+  <%=h @group.updated_at %>
+</p>
+
+<p>
+  <b>Created By:</b>
+  <%=h @group.creator ? @group.creator.login : "N/A" %>
+</p>
+
+<p>
+  <b>Updated By:</b>
+  <%=h @group.updater ? @group.updater.login : "N/A" %>
+</p>
+
+<%= link_to 'Edit', edit_group_path(@group) %> |
+<%= link_to 'Back', groups_path %>
+
+<br/>
+<h2>Group's users</h2>
+
+<table>
+  <tr>
+    <th>Login</th>
+    <th>Email</th>
+  </tr>
+  
+<% for user in @group.users %>
+  <tr>
+    <td><%=h user.login %></td>
+    <td><%=h user.email %></td>
+    <td><%= link_to 'Show', user_path(user) %></td>
+    <td><%= link_to 'Edit', edit_user_path(user) %></td>
+    <td><%= link_to 'Destroy', user_path(user), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<br/>
+
+<%= link_to 'Add user', new_group_membership_path(@group) %> |
+<%= link_to 'Membership index', group_memberships_path(@group) %>
+
+<br/>
+<h2>Group's permissions</h2>
+
+<table>
+  <tr>
+    <th>Thing</th>
+    <th>Read</th>
+    <th>Write</th>
+    <th>Sticky</th>
+  </tr>
+  
+<% for permission in @group.permissions %>
+  <tr>
+    <td><%= resource_link(permission.controller || permission.resource) %></td>
+    <td><%=h permission.can_read ? "yes" : "no" %></td>
+    <td><%=h permission.can_write ? "yes" : "no" %></td>
+    <td><%=h permission.is_sticky ? "yes" : "no" %></td>
+    <td><%= link_to 'Show', group_permission_url(@group, permission) %></td>
+    <td><%= link_to 'Edit', edit_group_permission_url(@group, permission) %></td>
+    <td><%= link_to 'Destroy', group_permission_url(@group, permission), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<br/>
+
+<%= link_to 'Add permission', new_group_permission_path(@group) %> |
+<%= link_to 'Permission index', group_permissions_path(@group) %>

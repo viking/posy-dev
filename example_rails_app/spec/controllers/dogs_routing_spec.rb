@@ -46,7 +46,7 @@ describe DogsController do
       params_from(:get, "/dogs/1").should == {:controller => "dogs", :action => "show", :id => "1"}
     end
   
-    it "should generate params { :controller => 'dogs', action => 'edit', id => '1' } from GET /dogs/1;edit" do
+    it "should generate params { :controller => 'dogs', action => 'edit', id => '1' } from GET /dogs/1/edit" do
       params_from(:get, "/dogs/1/edit").should == {:controller => "dogs", :action => "edit", :id => "1"}
     end
   

@@ -1,0 +1,248 @@
+#!/usr/bin/env ruby
+require File.dirname(__FILE__) + '/../config/boot'
+require File.dirname(__FILE__) + '/../config/environment'
+require 'pp'
+
+# automatically template files
+files = YAML.load(<<EOF)
+# models
+- original: "app/models/group.rb"
+  template: "group_model.rb"
+- original: "app/models/user.rb"
+  template: "user_model.rb"
+- original: "app/models/permission.rb"
+  template: "permission_model.rb"
+- original: "app/models/membership.rb"
+  template: "membership_model.rb"
+
+# controllers
+- template: groups_controller.rb
+  original: app/controllers/groups_controller.rb
+- template: memberships_controller.rb
+  original: app/controllers/memberships_controller.rb
+- template: permissions_controller.rb
+  original: app/controllers/permissions_controller.rb
+- template: sessions_controller.rb
+  original: app/controllers/sessions_controller.rb
+- template: users_controller.rb
+  original: app/controllers/users_controller.rb
+
+# helpers
+- template: memberships_helper.rb
+  original: app/helpers/memberships_helper.rb
+- template: groups_helper.rb
+  original: app/helpers/groups_helper.rb
+- template: users_helper.rb
+  original: app/helpers/users_helper.rb
+- template: permissions_helper.rb
+  original: app/helpers/permissions_helper.rb
+- template: sessions_helper.rb
+  original: app/helpers/sessions_helper.rb
+
+# views
+- template: errors_denied.rhtml
+  original: app/views/errors/denied.rhtml
+- template: groups_edit.rhtml
+  original: app/views/groups/edit.rhtml
+- template: groups_index.rhtml
+  original: app/views/groups/index.rhtml
+- template: groups_new.rhtml
+  original: app/views/groups/new.rhtml
+- template: groups_show.rhtml
+  original: app/views/groups/show.rhtml
+- template: application_layout.rhtml
+  original: app/views/layouts/application.rhtml
+- template: memberships_index.rhtml
+  original: app/views/memberships/index.rhtml
+- template: memberships_new.rhtml
+  original: app/views/memberships/new.rhtml
+- template: memberships_show.rhtml
+  original: app/views/memberships/show.rhtml
+- template: permissions_edit.rhtml
+  original: app/views/permissions/edit.rhtml
+- template: permissions_index.rhtml
+  original: app/views/permissions/index.rhtml
+- template: permissions_new.rhtml
+  original: app/views/permissions/new.rhtml
+- template: permissions_new.rjs
+  original: app/views/permissions/new.rjs
+- template: permissions_show.rhtml
+  original: app/views/permissions/show.rhtml
+- template: sessions_new.rhtml
+  original: app/views/sessions/new.rhtml
+- template: users_edit.rhtml
+  original: app/views/users/edit.rhtml
+- template: users_index.rhtml
+  original: app/views/users/index.rhtml
+- template: users_new.rhtml
+  original: app/views/users/new.rhtml
+- template: users_show.rhtml
+  original: app/views/users/show.rhtml
+
+# model specs
+- template: group_model_spec.rb
+  original: spec/models/group_spec.rb
+- template: membership_model_spec.rb
+  original: spec/models/membership_spec.rb
+- template: permission_model_spec.rb
+  original: spec/models/permission_spec.rb
+- template: user_model_spec.rb
+  original: spec/models/user_spec.rb
+
+# controller specs
+- template: users_controller_spec.rb
+  original: spec/controllers/users_controller_spec.rb
+- template: groups_controller_spec.rb
+  original: spec/controllers/groups_controller_spec.rb
+- template: memberships_controller_spec.rb
+  original: spec/controllers/memberships_controller_spec.rb
+- template: permissions_controller_spec.rb
+  original: spec/controllers/permissions_controller_spec.rb
+- template: sessions_controller_spec.rb
+  original: spec/controllers/sessions_controller_spec.rb
+
+# helper specs
+- template: application_helper_spec.rb
+  original: spec/helpers/application_helper_spec.rb
+- template: groups_helper_spec.rb
+  original: spec/helpers/groups_helper_spec.rb
+- template: memberships_helper_spec.rb
+  original: spec/helpers/memberships_helper_spec.rb
+- template: permissions_helper_spec.rb
+  original: spec/helpers/permissions_helper_spec.rb
+- template: sessions_helper_spec.rb
+  original: spec/helpers/sessions_helper_spec.rb
+- template: users_helper_spec.rb
+  original: spec/helpers/users_helper_spec.rb
+
+# view specs
+- template: groups_index_view_spec.rb
+  original: spec/views/groups/index_view_spec.rb
+- template: groups_new_view_spec.rb
+  original: spec/views/groups/new_view_spec.rb
+- template: groups_edit_view_spec.rb
+  original: spec/views/groups/edit_view_spec.rb
+- template: groups_show_view_spec.rb
+  original: spec/views/groups/show_view_spec.rb
+
+- template: users_index_view_spec.rb
+  original: spec/views/users/index_view_spec.rb
+- template: users_new_view_spec.rb
+  original: spec/views/users/new_view_spec.rb
+- template: users_edit_view_spec.rb
+  original: spec/views/users/edit_view_spec.rb
+- template: users_show_view_spec.rb
+  original: spec/views/users/show_view_spec.rb
+
+- template: permissions_index_view_spec.rb
+  original: spec/views/permissions/index_view_spec.rb
+- template: permissions_new_view_spec.rb
+  original: spec/views/permissions/new_view_spec.rb
+- template: permissions_edit_view_spec.rb
+  original: spec/views/permissions/edit_view_spec.rb
+- template: permissions_show_view_spec.rb
+  original: spec/views/permissions/show_view_spec.rb
+
+- template: memberships_index_view_spec.rb
+  original: spec/views/memberships/index_view_spec.rb
+- template: memberships_new_view_spec.rb
+  original: spec/views/memberships/new_view_spec.rb
+- template: memberships_show_view_spec.rb
+  original: spec/views/memberships/show_view_spec.rb
+
+- template: sessions_new_view_spec.rb
+  original: spec/views/sessions/new_view_spec.rb
+
+# lib specs
+- template: authenticated_system_spec.rb
+  original: spec/libs/authenticated_system_spec.rb
+
+# fixtures
+- template: groups.yml
+  original: spec/fixtures/groups.yml
+- template: memberships.yml
+  original: spec/fixtures/memberships.yml
+- template: permissions.yml
+  original: spec/fixtures/permissions.yml
+- template: users.yml
+  original: spec/fixtures/users.yml
+
+# mocks
+- template: pocky_mock.rb
+  original: test/mocks/test/pocky.rb
+- template: fake_model_mock.rb
+  original: test/mocks/test/fake_model.rb
+- template: ohagi_mock.rb
+  original: test/mocks/test/ohagi.rb
+
+# migrations
+- template: users_migration.rb
+  original: #{Dir["db/migrate/*_create_users.rb"][0]}
+- template: groups_migration.rb
+  original: #{Dir["db/migrate/*_create_groups.rb"][0]}
+- template: memberships_migration.rb
+  original: #{Dir["db/migrate/*_create_memberships.rb"][0]}
+- template: permissions_migration.rb
+  original: #{Dir["db/migrate/*_create_permissions.rb"][0]}
+- template: sessions_migration.rb
+  original: #{Dir["db/migrate/*_create_sessions.rb"][0]}
+
+# other
+- template: access_control.yml
+  original: config/access_control.yml
+- template: authenticated_system.rb
+  original: lib/authenticated_system.rb
+- template: authenticated_test_helper.rb
+  original: lib/authenticated_test_helper.rb
+- template: spinner.gif
+  original: public/images/spinner.gif
+- template: scaffold.css
+  original: public/stylesheets/scaffold.css
+EOF
+
+force = %w{--force -f}.include?(ARGV[0])
+template_dir = File.join(RAILS_ROOT, "vendor", "plugins", "posy",
+                         "generators", "posy", "templates")
+
+files.each do |hash|
+  fn      = hash["original"]
+  tfn     = File.join(template_dir, hash["template"])
+  generic = hash["generic"]
+  generic_singular = hash["singular"]
+
+  # skip files where the template has a more recent mtime
+  next  if !force and File.exist?(tfn) and File.mtime(tfn) > File.mtime(fn)
+
+  print "generically "  if generic
+  print "converting #{fn}..."; $stdout.flush
+  t = File.open(tfn, "w")
+  
+  orig = IO.read(File.join(RAILS_ROOT, fn))
+  orig.gsub!(/<%/, "<%%")
+  %w{group user membership permission session}.each do |singular|
+    klass  = singular.classify
+    plural = singular.pluralize
+    singular_replace = generic && singular == generic_singular ? "thing" : singular
+
+    # don't replace :foos with <%= thing_plural %> if it's in a fixtures line
+    orig.gsub!(/^\s*fixtures.+[:"]#{plural}"?/) do |match|
+      match.sub(/#{plural}/, "<%= #{singular}_plural %>")
+    end   if generic
+
+    orig.gsub!(/#{plural.capitalize}/, "<%= #{singular_replace}_plural_class %>") # for controllers
+    orig.gsub!(/#{klass}/,  "<%= #{singular_replace}_class %>")
+    orig.gsub!(/#{plural}/, "<%= #{singular_replace}_plural %>")
+    orig.gsub!(/(?:<%= )?#{singular}(?:_(?:plural|(?:plural_)?class) %>)?/) do |match|
+      # make sure we don't replace foo_class or foo_plural
+      case match
+      when /<%= #{singular}_(plural_)?class %>/, /<%= #{singular}_plural %>/
+        match
+      else
+        "<%= #{singular_replace}_singular %>"
+      end
+    end
+  end
+  t.puts orig
+  t.close
+  puts "done."
+end

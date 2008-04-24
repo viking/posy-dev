@@ -1,0 +1,27 @@
+<h1>Editing group</h1>
+
+<%= error_messages_for :group %>
+
+<% form_for(:group, :url => group_path(@group), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <b>Description</b><br />
+    <%= f.text_field :description %>
+  </p>
+
+  <p>
+    <b>Permanent</b><br />
+    <%= f.check_box :permanent %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', group_path(@group) %> |
+<%= link_to 'Back', groups_path %>

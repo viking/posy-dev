@@ -1,0 +1,15 @@
+if @resources
+  if @resources.empty?
+    page.replace_html(:resource_select, "<b>Resource</b><p>None available.</p>")
+  else
+    page.replace_html(:resource_select, "<b>Resource</b><br/>" + select("permission", "resource_id", @resources, :include_blank => true))
+  end
+elsif @controllers
+  if @controllers.empty?
+    page.replace_html(:resource_select, "<b>Controller</b><p>None available.</p>")
+  else
+    page.replace_html(:resource_select, "<b>Controller</b><br/>" + select("permission", "controller", @controllers, :include_blank => true))
+  end
+else
+  page.replace_html(:resource_select, "")
+end

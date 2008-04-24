@@ -1,0 +1,17 @@
+# put the controllers you want to regulate here
+#controllers:
+#  - dogs
+#  - cats
+#  - robots
+
+# put the name method of each model here (it's 'name' by default)
+#model_name_methods:
+#  Cat: name
+#  Dog: name
+#  default: name
+
+# put the models you want to show up in /permissions/new here
+#models:
+#  - Dog
+#  - Cat
+#  - Robot

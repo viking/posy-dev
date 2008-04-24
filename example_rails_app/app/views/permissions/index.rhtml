@@ -1,0 +1,31 @@
+<h1>Listing permissions</h1>
+
+<table>
+  <tr>
+    <th>Group</th>
+    <th>Thing</th>
+    <th>Read</th>
+    <th>Write</th>
+    <th>Sticky</th>
+  </tr>
+  
+<% for permission in @permissions %>
+  <tr>
+    <td><%=h permission.group.name %></td>
+    <td><%= resource_link(permission.controller || permission.resource) %></td>
+    <td><%=h permission.can_read ? "yes" : "no" %></td>
+    <td><%=h permission.can_write ? "yes" : "no" %></td>
+    <td><%=h permission.is_sticky ? "yes" : "no" %></td>
+    <td><%= link_to_show 'Show', permission %></td>
+    <td><%= link_to_edit 'Edit', permission %></td>
+    <td><%= link_to_destroy 'Destroy', permission, :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to_new 'New permission' %>
+<% if @group -%>
+| <%= link_to 'Back', group_path(@group) %>
+<% end -%>

@@ -1,0 +1,57 @@
+<h1>New permission <%= image_tag "spinner.gif", :id => "spinner", :style => "display:none" %></h1>
+
+<%= error_messages_for :permission %>
+
+<% form_for(:permission, :url => url_for_create) do |f| %>
+  <p>
+    <b>Group</b><br />
+    <% if @group -%>
+    <%=h @group.name %>
+    <% else -%>
+    <%= f.collection_select :group_id, @groups, 'id', 'name' %>
+    <% end -%>
+  </p>
+
+  <p>
+    <b>Resource Type</b><br />
+    <%= f.select :resource_type, @resource_types, :include_blank => true, :selected => params[:permission] ? params[:permission][:resource_type] : @permission.resource_type %>
+    <%= observe_field 'permission_resource_type', :url => { :action => 'new', :format => 'js' }, :with => "'permission[resource_type]='+value", :method => :get, :loading => "new Element.show('spinner')", :loaded => "new Element.hide('spinner')" %>
+  </p>
+
+  <p id="resource_select">
+  <% if @resources and @resources.empty? -%>
+    <b>Resource</b>
+    <p>None available.</p>
+  <% elsif @resources -%>
+    <b>Resource</b><br/>
+    <%= select("permission", "resource_id", @resources, :include_blank => true) %>
+  <% elsif @controllers and @controllers.empty? -%>
+    <b>Controller</b>
+    <p>None available.</p>
+  <% elsif @controllers -%>
+    <b>Controller</b><br/>
+    <%= select("permission", "controller", @controllers, :include_blank => true) %>
+  <% end -%>
+  </p>
+
+  <p>
+    <b>Read</b><br />
+    <%= f.check_box :can_read %>
+  </p>
+
+  <p>
+    <b>Write</b><br />
+    <%= f.check_box :can_write %>
+  </p>
+
+  <p>
+    <b>Sticky</b><br />
+    <%= f.check_box :is_sticky %>
+  </p>
+
+  <p>
+    <%= submit_tag "Create" %>
+  </p>
+<% end %>
+
+<%= link_to_index 'Back' %>
