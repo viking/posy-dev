@@ -1,3 +1,3 @@
 This is the development tree for the Posy Rails plugin
 (git://github.com/viking/posy).  It is a Rails example application, where the
-Posy repository is cloned in vendor/plugins.
+Posy repository is a submodule in vendor/plugins.
