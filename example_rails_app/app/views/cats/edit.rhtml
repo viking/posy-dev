@@ -1,0 +1,17 @@
+<h1>Editing cat</h1>
+
+<%= error_messages_for :cat %>
+
+<% form_for(:cat, :url => cat_path(@cat), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', cat_path(@cat) %> |
+<%= link_to 'Back', cats_path %>

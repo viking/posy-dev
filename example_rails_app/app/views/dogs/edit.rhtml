@@ -1,0 +1,17 @@
+<h1>Editing dog</h1>
+
+<%= error_messages_for :dog %>
+
+<% form_for(:dog, :url => dog_path(@dog), :html => { :method => :put }) do |f| %>
+  <p>
+    <b>Name</b><br />
+    <%= f.text_field :name %>
+  </p>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', dog_path(@dog) %> |
+<%= link_to 'Back', dogs_path %>
