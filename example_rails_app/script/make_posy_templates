@@ -92,12 +92,20 @@ files = YAML.load(<<EOF)
 # controller specs
 - template: users_controller_spec.rb
   original: spec/controllers/users_controller_spec.rb
+- template: users_routing_spec.rb
+  original: spec/controllers/users_routing_spec.rb
 - template: groups_controller_spec.rb
   original: spec/controllers/groups_controller_spec.rb
+- template: groups_routing_spec.rb
+  original: spec/controllers/groups_routing_spec.rb
 - template: memberships_controller_spec.rb
   original: spec/controllers/memberships_controller_spec.rb
+- template: memberships_routing_spec.rb
+  original: spec/controllers/memberships_routing_spec.rb
 - template: permissions_controller_spec.rb
   original: spec/controllers/permissions_controller_spec.rb
+- template: permissions_routing_spec.rb
+  original: spec/controllers/permissions_routing_spec.rb
 - template: sessions_controller_spec.rb
   original: spec/controllers/sessions_controller_spec.rb
 
