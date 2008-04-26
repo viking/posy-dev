@@ -42,7 +42,7 @@ module AuthenticatedSystem
     #
     # NOTE: It doesn't make sense to have an action in sticky_actions that also isn't in
     #       resource_actions, because access will always be denied (since authorized? will
-    #       check for current_resource, which will be nil).
+    #       check for current_resource, which would be nil for a non-resource action).
     #
     def sticky_actions(*actions)
       return read_inheritable_attribute(:sticky_actions)    if actions.empty?
