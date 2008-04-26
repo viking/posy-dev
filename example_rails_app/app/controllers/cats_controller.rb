@@ -1,4 +1,6 @@
 class CatsController < ApplicationController
+  before_filter :login_required
+
   # GET /cats
   # GET /cats.xml
   def index

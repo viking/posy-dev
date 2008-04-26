@@ -5,6 +5,30 @@ require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
 require 'spec'
 require 'spec/rails'
 require 'metaid'
+require 'ruby-debug'
+
+module CustomMatchers
+  module Controller
+    class BeUnauthorized
+      def matches?(response)
+        @response = response
+        @response.response_code == 401
+      end
+
+      def failure_message
+        "expected #{@response.response_code} to be 401"
+      end
+
+      def negative_failure_message
+        "expected #{@response.response_code} not to be 401"
+      end
+    end
+
+    def be_unauthorized
+      BeUnauthorized.new
+    end
+  end
+end
 
 Spec::Runner.configure do |config|
   # If you're not using ActiveRecord you should remove these
@@ -13,6 +37,8 @@ Spec::Runner.configure do |config|
   config.use_transactional_fixtures = true
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
+
+  config.include(CustomMatchers::Controller, :behaviour_type => :controller) 
 
   # == Fixtures
   #

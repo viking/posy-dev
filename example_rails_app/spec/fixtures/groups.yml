@@ -37,3 +37,63 @@ potters:
   updated_by: 1
   created_at: <%= Time.now.to_s :db %>
   updated_at: <%= Time.now.to_s :db %>
+
+cat_readers:
+  id: 6
+  name: cat_readers
+  description: people who can read cats
+  permanent: false
+  created_by: 1
+  updated_by: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+
+cat_writers:
+  id: 7
+  name: cat_writers
+  description: people who can write cats
+  permanent: false
+  created_by: 1
+  updated_by: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+
+cat_admins:
+  id: 8
+  name: cat_admins
+  description: people who can admin cats
+  permanent: false
+  created_by: 1
+  updated_by: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+
+fluffy_readers:
+  id: 9
+  name: fluffy_readers
+  description: people who can read cat 'fluffy'
+  permanent: false
+  created_by: 1
+  updated_by: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+
+fluffy_writers:
+  id: 10
+  name: fluffy_writers
+  description: people who can write cat 'fluffy'
+  permanent: false
+  created_by: 1
+  updated_by: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+
+fluffy_admins:
+  id: 11
+  name: fluffy_admins
+  description: people who can read/write cat 'fluffy'
+  permanent: false
+  created_by: 1
+  updated_by: 1
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>

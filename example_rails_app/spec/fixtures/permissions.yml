@@ -1,1 +1,83 @@
+cat_reader:
+  id: 1
+  group_id: 6
+  resource_id:
+  resource_type:
+  controller: cats
+  can_read: yes
+  can_write: no
+  is_sticky: no
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
 
+cat_writer:
+  id: 2
+  group_id: 7
+  resource_id:
+  resource_type:
+  controller: cats
+  can_read: no
+  can_write: yes
+  is_sticky: no
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
+
+cat_admin:
+  id: 3
+  group_id: 8
+  resource_id:
+  resource_type:
+  controller: cats
+  can_read: yes
+  can_write: yes
+  is_sticky: no
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
+
+fluffy_reader:
+  id: 4
+  group_id: 9
+  resource_id: 1
+  resource_type: Cat
+  controller: 
+  can_read: yes
+  can_write: no
+  is_sticky: no
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
+
+fluffy_writer:
+  id: 5
+  group_id: 10
+  resource_id: 1
+  resource_type: Cat
+  controller: 
+  can_read: no
+  can_write: yes
+  is_sticky: no
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
+
+fluffy_admin:
+  id: 6
+  group_id: 11
+  resource_id: 1
+  resource_type: Cat
+  controller: 
+  can_read: yes
+  can_write: yes
+  is_sticky: no
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1

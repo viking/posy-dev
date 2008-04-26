@@ -11,6 +11,7 @@ admin:
   created_at: <%= Time.now.to_s :db %> 
   accessed_at:
 
+# my extreme nerdom is given away by my fixtures
 george:
   id: 2
   login: george
@@ -54,6 +55,84 @@ draco:
   id: 5
   login: draco
   email: draco@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+cat_reader:
+  id: 6
+  login: cat_reader
+  email: cat_reader@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+cat_writer:
+  id: 7
+  login: cat_writer
+  email: cat_writer@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+cat_admin:
+  id: 8
+  login: cat_admin
+  email: cat_admin@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+fluffy_reader:
+  id: 9
+  login: fluffy_reader
+  email: fluffy_reader@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+fluffy_writer:
+  id: 10
+  login: fluffy_writer
+  email: fluffy_writer@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+fluffy_admin:
+  id: 11
+  login: fluffy_admin
+  email: fluffy_admin@example.com
   salt: b20c4b3846992b7c2d718c2e588f2c032a112835
   crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
   created_by: 1
