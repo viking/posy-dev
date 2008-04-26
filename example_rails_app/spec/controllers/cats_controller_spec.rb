@@ -643,7 +643,112 @@ describe CatsController do
     end
   end
 
-  describe "when logged in as a user with rw+t access to cats" do
-    it "should do what I think it should, dammit!"
+  describe "when logged in as a user with write access to cats (sticky)" do
+    before(:each) do
+      login_as(:sticky_cat_writer)
+      @cat = Cat.create(:name => "mrs. norris")
+    end
+
+    it "should fail GET /cats" do
+      get :index
+      response.should be_unauthorized
+    end
+    
+    it "should fail GET /cats/3" do
+      get :show, :id => @cat.id.to_s 
+      response.should be_unauthorized
+    end
+
+    it "should GET /cats/new successfully" do
+      get :new
+      response.should be_success 
+    end
+
+    it "should fail GET /cats/3/edit" do
+      get :edit, :id => @cat.id.to_s 
+      response.should be_unauthorized 
+    end
+
+    it "should POST /cats successfully" do
+      post :create, :cat => {} 
+      response.should be_redirect 
+    end
+
+    it "should PUT /cats/3 successfully" do
+      put :update, :id => @cat.id.to_s 
+      response.should be_redirect 
+    end
+
+    it "should fail PUT /cats/1" do
+      put :update, :id => "1" 
+      response.should be_unauthorized 
+    end
+
+    it "should DELETE /cats/3 successfully" do
+      delete :destroy, :id => @cat.id.to_s 
+      response.should be_redirect 
+    end
+
+    it "should fail DELETE /cats/1" do
+      delete :destroy, :id => "1" 
+      response.should be_unauthorized 
+    end
+  end
+
+  describe "when logged in as a user with read and write access to cats (sticky)" do
+    before(:each) do
+      login_as(:sticky_cat_admin)
+      @cat = Cat.create(:name => "mrs. norris")
+    end
+
+    it "should GET /cats successfully" do
+      get :index
+      response.should be_success
+    end
+    
+    it "should GET /cats/3 successfully" do
+      get :show, :id => @cat.id.to_s 
+      response.should be_success
+    end
+
+    it "should GET /cats/new successfully" do
+      get :new
+      response.should be_success 
+    end
+
+    it "should GET /cats/3/edit successfully" do
+      get :edit, :id => @cat.id.to_s 
+      response.should be_success 
+    end
+
+    it "should fail GET /cats/1/edit" do
+      get :edit, :id => "1" 
+      response.should be_unauthorized 
+    end
+
+    it "should POST /cats successfully" do
+      post :create, :cat => {} 
+      response.should be_redirect 
+    end
+
+    it "should PUT /cats/3 successfully" do
+      put :update, :id => @cat.id.to_s 
+      response.should be_redirect 
+    end
+
+    it "should fail PUT /cats/1" do
+      put :update, :id => "1" 
+      response.should be_unauthorized 
+    end
+
+    it "should DELETE /cats/3 successfully" do
+      delete :destroy, :id => @cat.id.to_s 
+      response.should be_redirect 
+    end
+
+    it "should fail DELETE /cats/1" do
+      delete :destroy, :id => "1" 
+      response.should be_unauthorized 
+    end
   end
 end

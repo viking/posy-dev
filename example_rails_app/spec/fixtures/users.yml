@@ -141,3 +141,29 @@ fluffy_admin:
   updated_at: <%= Time.now.to_s :db %>
   created_at: <%= Time.now.to_s :db %>
   accessed_at:
+
+sticky_cat_writer:
+  id: 12
+  login: sticky_cat_writer
+  email: sticky_cat_writer@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:
+
+sticky_cat_admin:
+  id: 13
+  login: sticky_cat_admin
+  email: sticky_cat_admin@example.com
+  salt: b20c4b3846992b7c2d718c2e588f2c032a112835
+  crypted_password: 8af044306e5fac065530191ebbffe4a19cff1234
+  created_by: 1
+  updated_by: 1
+  deleted: false
+  updated_at: <%= Time.now.to_s :db %>
+  created_at: <%= Time.now.to_s :db %>
+  accessed_at:

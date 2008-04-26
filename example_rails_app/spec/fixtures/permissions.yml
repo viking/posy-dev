@@ -81,3 +81,31 @@ fluffy_admin:
   updated_at: <%= Time.now.to_s :db %>
   created_by: 1
   updated_by: 1
+
+sticky_cat_writer:
+  id: 7
+  group_id: 12
+  resource_id:
+  resource_type:
+  controller: cats
+  can_read: no
+  can_write: yes
+  is_sticky: yes
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
+
+sticky_cat_admin:
+  id: 8
+  group_id: 13
+  resource_id:
+  resource_type:
+  controller: cats
+  can_read: yes
+  can_write: yes
+  is_sticky: yes
+  created_at: <%= Time.now.to_s :db %>
+  updated_at: <%= Time.now.to_s :db %>
+  created_by: 1
+  updated_by: 1
