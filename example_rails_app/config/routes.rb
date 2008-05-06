@@ -8,6 +8,8 @@ ActionController::Routing::Routes.draw do |map|
     group.resources :permissions, :name_prefix => 'group_'
   end
 
+  map.resources :people
+
   map.resources :dogs
 
   map.resources :cats

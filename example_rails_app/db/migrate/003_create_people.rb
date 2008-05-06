@@ -1,8 +1,7 @@
-class CreateCats < ActiveRecord::Migration
+class CreatePeople < ActiveRecord::Migration
   def self.up
-    create_table :cats do |t|
+    create_table :people do |t|
       t.column :name, :string
-      t.column :person_id, :integer
       t.column :created_by, :integer
       t.column :updated_by, :integer
       t.column :created_at, :timestamp
@@ -11,6 +10,6 @@ class CreateCats < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :cats
+    drop_table :people
   end
 end
