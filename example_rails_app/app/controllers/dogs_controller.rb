@@ -1,4 +1,7 @@
 class DogsController < ApplicationController
+  before_filter :login_required
+  access_hierarchies [:people]
+
   # GET /dogs
   # GET /dogs.xml
   def index

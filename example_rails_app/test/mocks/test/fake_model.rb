@@ -33,6 +33,10 @@ class FakeModel
   end
 
   def self.find(*args)
-    self.new(args[0])
+    self.new(args[0].to_i)
+  end
+
+  def self.find_by_id(id)
+    self.new(id.to_i)
   end
 end

@@ -1,4 +1,6 @@
 class Permission < ActiveRecord::Base
+  before_validation_on_create :get_group_id_from_parent
+
   validates_presence_of :group_id
 
   # only resource_id or controller can exist, but at least one of them must exist
@@ -48,6 +50,9 @@ class Permission < ActiveRecord::Base
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by"
   belongs_to :updater, :class_name => "User", :foreign_key => "updated_by"
 
+  belongs_to :parent, :class_name => "Permission", :foreign_key => "parent_id"
+  has_many :children, :class_name => "Permission", :foreign_key => "parent_id"
+
   def can_read?
     self['can_read']
   end
@@ -72,4 +77,9 @@ class Permission < ActiveRecord::Base
       raise "bad access mode"
     end 
   end
+
+  private
+    def get_group_id_from_parent
+      self.group_id = parent.group_id   if parent
+    end
 end

@@ -61,17 +61,30 @@ describe "a controller that uses AuthenticatedSystem" do
     @klass.remove_sticky_actions(:edit, :update)
     @klass.sticky_actions.should == AuthenticatedSystem::DEFAULT_STICKY_ACTIONS - %w{edit update}
   end
+
+  describe "#access_hierarchies" do
+    it "should be empty by default" do
+      @klass.access_hierarchies.should == []
+    end
+
+    it "should change when given arguments" do
+      @klass.access_hierarchies([:foo, :bar], [:baz, :boof])
+      @klass.access_hierarchies.should == [%w{foo bar}, %w{baz boof}]
+    end
+  end
 end
+
+class BarTestController < ActionController::Base
+  include AuthenticatedSystem
+
+  action_permissions('r' => %w{index})
+  resource_actions(:foo, :bar)
+  sticky_actions(:trousers, :pants)
+end
+
 
 describe "a subclass of a controller that uses AuthenticatedSystem" do
   before(:all) do
-    class BarTestController < ActionController::Base
-      include AuthenticatedSystem
-    end
-
-    BarTestController.action_permissions('r' => %w{index})
-    BarTestController.resource_actions(:foo, :bar)
-    BarTestController.sticky_actions(:trousers, :pants)
     @@counter = 100
   end
 
@@ -292,7 +305,7 @@ describe PockyTestController, :type => :controller do
 
     it "should always return a resource permission if it exists" do
       @controller.stub!(:current_resource).and_return(@pocky)
-      permission = mock_model(Permission, :resource => @pocky)
+      permission = mock_model(Permission, :resource => @pocky, :parent => nil)
       @user.stub!(:permissions).and_return([permission])
 
       @controller.send(:current_permission).should == permission
@@ -300,7 +313,7 @@ describe PockyTestController, :type => :controller do
 
     it "should return a controller permission if a resource permission doesn't exist" do
       @controller.stub!(:current_resource).and_return(nil)
-      permission = mock_model(Permission, :controller => "pocky_test", :resource => nil)
+      permission = mock_model(Permission, :controller => "pocky_test", :resource => nil, :parent => nil)
       @user.stub!(:permissions).and_return([permission])
 
       @controller.send(:current_permission).should == permission
@@ -668,6 +681,226 @@ describe PockyTestController, :type => :controller do
       get :bar
       request.env['Authorization'] = "Basic YWRtaW46dGVzdA=="  # admin:test
       @controller.send(:get_auth_data).should == %w{admin test}
+    end
+  end
+end
+
+class ModelOne < FakeModel; end
+class ModelTwo < FakeModel; end
+class ModelThree < FakeModel; end
+
+class OneTestController < ActionController::Base
+  include AuthenticatedSystem
+  resource_model_name :model_one
+end
+
+class TwoTestController < ActionController::Base
+  include AuthenticatedSystem
+  before_filter :login_required
+  resource_model_name :model_two
+  access_hierarchies [:one_test]
+
+  def index; end
+  def new; end
+  def create; end
+  def show; end
+  def edit; end
+  def update; end
+  def destroy; end
+end
+
+class ThreeTestController < ActionController::Base
+  include AuthenticatedSystem
+  before_filter :login_required
+  resource_model_name :model_three
+  access_hierarchies [:one_test, :two_test], [:one_test]
+
+  def index; end
+  def new; end
+  def create; end
+  def show; end
+  def edit; end
+  def update; end
+  def destroy; end
+end
+
+describe "controller structure with an access hierarchy", :type => :controller do
+  fixtures :users, :groups, :permissions, :memberships
+  include AuthenticatedTestHelper
+
+  before(:each) do
+    Posy.stub!(:controllers).and_return(%w{one_test two_test three_test})
+    @user = User.create({
+      :login => "test_user", :email => "test_user@example.com",
+      :password => "test", :password_confirmation => "test"
+    })
+    @group = Group.create(:name => "test_group")
+    @user.memberships.create(:group => @group)
+  end
+
+  describe TwoTestController do
+    before(:each) do
+      @one   = ModelOne.new(1)
+      @two   = ModelTwo.new(1)
+      @three = ModelThree.new(1)
+      @parent = @group.permissions.create(:resource => @one, :can_read => true)
+      @child  = @group.permissions.create({
+        :controller => "two_test", :parent => @parent,
+        :can_read => true, :can_write => true
+      })
+      login_as(@user)
+    end
+
+    describe "when params[:one_test_id] = 1" do
+      before(:each) do
+        @params = { :one_test_id => "1" }
+      end
+
+      describe "GET /two_test" do
+        def do_get
+          get :index, @params
+        end
+
+        it "should find the correct permission" do
+          do_get
+          @controller.send(:current_permission).should == @child
+        end
+
+        it "should be successful" do
+          do_get
+          response.should be_success
+        end
+      end
+
+      describe "GET /two_test/1" do
+        def do_get
+          get :show, @params
+        end
+
+        before(:each) do
+          @params[:id] = "1"
+        end
+
+        it "should be successful" do
+          do_get
+          response.should be_success
+        end
+
+        describe "#current_permission" do
+          it "should be the child controller permission" do
+            do_get
+            @controller.send(:current_permission).should == @child
+          end
+
+          it "should be the child controller permission even if the user has 'direct' access to the resource" do
+            @group.permissions.create(:resource => @two, :can_read => true)
+            do_get
+            @controller.send(:current_permission).should == @child
+          end
+
+          it "should be the child resource permission" do
+            perm = @group.permissions.create(:resource => @two, :can_read => true, :parent => @parent)
+            do_get
+            @controller.send(:current_permission).should == perm
+          end
+        end
+      end
+    end
+
+    describe "when params[:one_test_id] != 1" do
+      it "should fail to GET index" do
+        get :index, :one_test_id => "2"
+        response.should be_unauthorized
+      end
+
+      it "should fail to GET show" do
+        get :show, :one_test_id => "2", :id => "1"
+        response.should be_unauthorized
+      end
+    end
+  end
+
+  describe ThreeTestController do
+    before(:each) do
+      @one   = ModelOne.new(1)
+      @two   = ModelTwo.new(1)
+      @three = ModelThree.new(1)
+      @one_perm = @group.permissions.create(:resource => @one, :can_read => true)
+      login_as(@user)
+    end
+
+    describe do
+      before(:each) do
+        @params = { :one_test_id => "1" }
+        @parent = @one_perm
+        @child  = @group.permissions.create({
+          :controller => "three_test", :parent => @parent,
+          :can_read => true, :can_write => true
+        })
+      end
+
+      describe "GET /one_test/1/three_test" do
+        def do_get
+          get :index, @params
+        end
+
+        it "should find the correct permission" do
+          do_get
+          @controller.send(:current_permission).should == @child
+        end
+
+        it "should be successful" do
+          do_get
+          response.should be_success
+        end
+      end
+    end
+
+    describe do
+      before(:each) do
+        @params = { :one_test_id => "1", :two_test_id => "1" }
+        @grandparent = @one_perm
+        @parent = @group.permissions.create({
+          :resource => @two, :can_read => true, 
+          :parent => @grandparent
+        })
+        @child = @group.permissions.create({
+          :controller => "three_test", :parent => @parent,
+          :can_read => true, :can_write => true
+        })
+      end
+
+      describe "GET /one_test/1/two_test/2/three_test" do
+        def do_get
+          get :index, @params
+        end
+
+        it "should find the correct permission" do
+          do_get
+          @controller.send(:current_permission).should == @child
+        end
+
+        it "should be successful" do
+          do_get
+          response.should be_success
+        end
+
+        describe "when parent permission is a controller permission" do
+          before(:each) do
+            @parent.update_attributes(:resource => nil, :controller => "two_test")
+          end
+
+          it "should find the correct permission" do
+            do_get
+            @controller.send(:current_permission).should == @child
+          end
+
+          it "should be successful" do
+            do_get
+            response.should be_success
+          end
+        end
+      end
     end
   end
 end

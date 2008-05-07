@@ -69,55 +69,75 @@ describe Permission do
     permission1.should be_valid
     permission2.should_not be_valid
   end
-end
 
-describe Permission, "#can_read?" do
-  it "should equal can_read" do
-    permission = Permission.new(:can_read => true)
-    permission.can_read?.should be_true
-    permission[:can_read] = false
-    permission.can_read?.should be_false
-  end
-end
+  describe "when procreating" do
+    before(:each) do
+      @pocky  = Pocky.new
+      @parent = create_permission(:group => groups(:malfoys), :resource => @pocky)
+      @child  = create_permission(:parent => @parent, :controller => "vampires")
+    end
 
-describe Permission, "#can_write?" do
-  it "should equal can_write" do
-    permission = Permission.new(:can_write => true)
-    permission.can_write?.should be_true
-    permission[:can_write] = false
-    permission.can_write?.should be_false
-  end
-end
+    it "should assign the child group from its parent" do
+      @child.group.should == groups(:malfoys)
+    end
 
-describe Permission, "#can_read_and_write?" do
-  it "should equal can_read && can_write" do
-    permission = Permission.new(:can_write => true, :can_read => false)
-    permission.can_read_and_write?.should be_false
-    permission[:can_read] = true
-    permission.can_read_and_write?.should be_true
-  end
-end
+    it "should have a valid child" do
+      @child.should be_valid
+    end
 
-describe Permission, "#can_access?" do
-  it "should equal can_read when called with 'r'" do
-    permission = Permission.new(:can_read => true)
-    permission.can_access?('r').should be_true
-    permission[:can_read] = false
-    permission.can_access?('r').should be_false
+    it "should have a parent with children" do
+      @parent.children.should include(@child)
+    end
   end
 
-  it "should equal can_write when called with 'w'" do
-    permission = Permission.new(:can_write => true)
-    permission.can_access?('w').should be_true
-    permission[:can_write] = false
-    permission.can_access?('w').should be_false
+  describe "#can_read?" do
+    it "should equal can_read" do
+      permission = Permission.new(:can_read => true)
+      permission.can_read?.should be_true
+      permission[:can_read] = false
+      permission.can_read?.should be_false
+    end
   end
 
-  it "should equal can_read && can_write when called with 'rw'" do
-    permission = Permission.new(:can_write => true, :can_read => false)
-    permission.can_access?('rw').should be_false
-    permission[:can_read] = true
-    permission.can_access?('rw').should be_true
+  describe "#can_write?" do
+    it "should equal can_write" do
+      permission = Permission.new(:can_write => true)
+      permission.can_write?.should be_true
+      permission[:can_write] = false
+      permission.can_write?.should be_false
+    end
+  end
+
+  describe "#can_read_and_write?" do
+    it "should equal can_read && can_write" do
+      permission = Permission.new(:can_write => true, :can_read => false)
+      permission.can_read_and_write?.should be_false
+      permission[:can_read] = true
+      permission.can_read_and_write?.should be_true
+    end
+  end
+
+  describe "#can_access?" do
+    it "should equal can_read when called with 'r'" do
+      permission = Permission.new(:can_read => true)
+      permission.can_access?('r').should be_true
+      permission[:can_read] = false
+      permission.can_access?('r').should be_false
+    end
+
+    it "should equal can_write when called with 'w'" do
+      permission = Permission.new(:can_write => true)
+      permission.can_access?('w').should be_true
+      permission[:can_write] = false
+      permission.can_access?('w').should be_false
+    end
+
+    it "should equal can_read && can_write when called with 'rw'" do
+      permission = Permission.new(:can_write => true, :can_read => false)
+      permission.can_access?('rw').should be_false
+      permission[:can_read] = true
+      permission.can_access?('rw').should be_true
+    end
   end
 end
 

@@ -8,6 +8,7 @@ class CreatePermissions < ActiveRecord::Migration
       t.column :can_read, :boolean
       t.column :can_write, :boolean
       t.column :is_sticky, :boolean
+      t.column :parent_id, :integer
       t.column :created_at, :datetime
       t.column :updated_at, :datetime
       t.column :created_by, :integer
