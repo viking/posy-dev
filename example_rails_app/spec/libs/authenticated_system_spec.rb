@@ -810,12 +810,12 @@ describe "controller structure with an access hierarchy", :type => :controller d
     describe "when params[:one_test_id] != 1" do
       it "should fail to GET index" do
         get :index, :one_test_id => "2"
-        response.should be_unauthorized
+        response.response_code.should == 401
       end
 
       it "should fail to GET show" do
         get :show, :one_test_id => "2", :id => "1"
-        response.should be_unauthorized
+        response.response_code.should == 401
       end
     end
   end
